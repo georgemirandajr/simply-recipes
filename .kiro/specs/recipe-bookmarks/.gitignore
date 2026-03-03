@@ -1,0 +1,10 @@
+# Android Studio will generate this, but here's a preview
+*.iml
+.gradle
+/local.properties
+/.idea/
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
