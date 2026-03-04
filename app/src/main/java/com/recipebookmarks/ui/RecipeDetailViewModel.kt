@@ -2,6 +2,7 @@ package com.recipebookmarks.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.recipebookmarks.data.Category
 import com.recipebookmarks.data.Recipe
 import com.recipebookmarks.data.ScaledIngredient
 import com.recipebookmarks.domain.RecipeRepository
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 /**
  * ViewModel for the recipe detail screen.
@@ -68,5 +70,21 @@ class RecipeDetailViewModel(
      */
     fun setScalingFactor(factor: ScalingFactor) {
         _scalingFactor.value = factor
+    }
+    
+    /**
+     * Updates the category of the current recipe.
+     * Requirements 9.2, 9.4: Allow users to assign and modify category tags
+     */
+    fun updateCategory(category: Category) {
+        viewModelScope.launch {
+            recipe.value?.let { currentRecipe ->
+                val updatedRecipe = currentRecipe.copy(
+                    category = category,
+                    updatedAt = System.currentTimeMillis()
+                )
+                repository.updateRecipe(updatedRecipe)
+            }
+        }
     }
 }

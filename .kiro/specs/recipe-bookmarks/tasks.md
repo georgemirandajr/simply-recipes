@@ -193,13 +193,13 @@ The implementation follows an incremental approach: starting with core data mode
     - **Validates: Requirements 8.3, 8.4, 8.5, 8.6**
 
 - [ ] 9. Implement category management
-  - [~] 9.1 Add category assignment UI to RecipeDetailActivity
+  - [x] 9.1 Add category assignment UI to RecipeDetailActivity
     - Add category selector (Spinner or dropdown) to detail view
     - Populate with Category enum values
     - Show current category selection
     - _Requirements: 9.2, 9.4, 9.9_
 
-  - [~] 9.2 Implement category update in RecipeDetailViewModel
+  - [x] 9.2 Implement category update in RecipeDetailViewModel
     - Add updateCategory() method
     - Call repository.updateRecipe() with modified category
     - _Requirements: 9.2, 9.3, 9.4, 9.5_
@@ -208,7 +208,7 @@ The implementation follows an incremental approach: starting with core data mode
     - **Property 24: Category assignment and persistence**
     - **Validates: Requirements 9.2, 9.3, 9.4, 9.5**
 
-  - [~] 9.4 Implement category filtering in RecipeListActivity
+  - [x] 9.4 Implement category filtering in RecipeListActivity
     - Add category filter Spinner to list view
     - Include "All Categories" option
     - Update RecipeListViewModel to filter by selected category
@@ -249,7 +249,7 @@ The implementation follows an incremental approach: starting with core data mode
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 12. Implement recipe parsing from HTML
-  - [~] 12.1 Create RecipeParser interface and implementation
+  - [x] 12.1 Create RecipeParser interface and implementation
     - Add Jsoup dependency for HTML parsing
     - Implement parseRecipe() method to extract recipe data from HTML
     - Support common recipe schema formats (JSON-LD, Microdata, RDFa)
@@ -269,7 +269,7 @@ The implementation follows an incremental approach: starting with core data mode
     - _Requirements: 11.5_
 
 - [ ] 13. Implement network client for URL fetching
-  - [~] 13.1 Create NetworkClient interface and implementation
+  - [x] 13.1 Create NetworkClient interface and implementation
     - Add OkHttp or Retrofit dependency
     - Implement fetchHtml() method to retrieve webpage content from URL
     - Set timeout to 30 seconds
@@ -284,7 +284,7 @@ The implementation follows an incremental approach: starting with core data mode
     - _Requirements: 11.4_
 
 - [ ] 14. Implement URL import service
-  - [~] 14.1 Create ImportService as IntentService or WorkManager Worker
+  - [x] 14.1 Create ImportService as IntentService or WorkManager Worker
     - Implement handleSharedUrls() method
     - Process each URL sequentially
     - Call NetworkClient.fetchHtml() for each URL
@@ -305,7 +305,7 @@ The implementation follows an incremental approach: starting with core data mode
     - **Property 42: Import continues after errors**
     - **Validates: Requirements 11.2, 11.3, 11.4, 11.6, 11.7, 11.13**
 
-  - [~] 14.3 Implement error handling and user notifications
+  - [x] 14.3 Implement error handling and user notifications
     - Show error message for inaccessible URLs (ImportError.URL_INACCESSIBLE)
     - Show error message for parse failures (ImportError.PARSE_FAILED)
     - Show success confirmation for single URL imports
@@ -320,13 +320,13 @@ The implementation follows an incremental approach: starting with core data mode
     - **Validates: Requirements 11.9, 11.10, 11.11, 11.12**
 
 - [ ] 15. Register app as Android share target
-  - [~] 15.1 Add intent filter to AndroidManifest.xml
+  - [x] 15.1 Add intent filter to AndroidManifest.xml
     - Register ImportService or dedicated activity as share target
     - Add intent filter for ACTION_SEND with text/plain MIME type
     - Add intent filter for ACTION_SEND_MULTIPLE for bookmark folder sharing
     - _Requirements: 11.1, 11.2, 11.3_
 
-  - [~] 15.2 Create share handling activity or update ImportService
+  - [x] 15.2 Create share handling activity or update ImportService
     - Extract shared URL(s) from Intent extras
     - Pass URLs to ImportService for processing
     - Show progress indicator during import

@@ -19,4 +19,13 @@
     <string name="scaling_1_5x">1.5x</string>
     <string name="scaling_2x">2.0x</string>
     <string name="scaling_warning">Note: Instructions may need modification based on the selected quantity.</string>
+    
+    <!-- Category Strings -->
+    <string name="category_label">Category:</string>
+    <string name="category_breakfast">Breakfast</string>
+    <string name="category_lunch">Lunch</string>
+    <string name="category_dinner">Dinner</string>
+    <string name="category_dessert">Dessert</string>
+    <string name="category_drink">Drink</string>
+    <string name="category_sauce">Sauce</string>
 </resources>

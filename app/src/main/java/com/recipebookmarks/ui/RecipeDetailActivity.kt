@@ -4,8 +4,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.RadioGroup
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -13,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.recipebookmarks.R
+import com.recipebookmarks.data.Category
 import com.recipebookmarks.data.RecipeDatabase
 import com.recipebookmarks.domain.RecipeRepositoryImpl
 import com.recipebookmarks.domain.ScalingFactor
@@ -25,8 +30,9 @@ import kotlinx.coroutines.launch
  * Displays instructions in sequential order as numbered steps.
  * Displays original recipe link as clickable element when available.
  * Supports ingredient scaling with 1.0x, 1.5x, and 2.0x factors.
+ * Supports category assignment and modification.
  * 
- * Requirements: 1.2, 2.1, 2.2, 2.3, 3.1, 3.2, 3.3, 5.1, 5.2, 5.3, 6.1, 6.2, 6.3, 8.3, 8.4, 8.5
+ * Requirements: 1.2, 2.1, 2.2, 2.3, 3.1, 3.2, 3.3, 5.1, 5.2, 5.3, 6.1, 6.2, 6.3, 8.3, 8.4, 8.5, 9.2, 9.4, 9.9
  */
 class RecipeDetailActivity : AppCompatActivity() {
     
@@ -40,6 +46,9 @@ class RecipeDetailActivity : AppCompatActivity() {
     private lateinit var originalLinkTextView: TextView
     private lateinit var scalingRadioGroup: RadioGroup
     private lateinit var scalingWarningTextView: TextView
+    private lateinit var categorySpinner: Spinner
+    
+    private var isUpdatingCategorySpinner = false
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,10 +74,15 @@ class RecipeDetailActivity : AppCompatActivity() {
         originalLinkTextView = findViewById(R.id.originalLinkTextView)
         scalingRadioGroup = findViewById(R.id.scalingRadioGroup)
         scalingWarningTextView = findViewById(R.id.scalingWarningTextView)
+        categorySpinner = findViewById(R.id.categorySpinner)
         
         // Set up scaling factor selector
         // Requirement 8.5: Update scaling factor selector to change ViewModel state
         setupScalingControls()
+        
+        // Set up category selector
+        // Requirements 9.2, 9.4, 9.9: Add category selector, populate with Category enum values, show current category
+        setupCategorySelector()
         
         // Observe recipe data and update yield/serving size
         // Requirements 3.1, 3.2, 3.3: Display yield and serving size information
@@ -81,6 +95,7 @@ class RecipeDetailActivity : AppCompatActivity() {
                         displayNutritionInfo(it)
                         displayInstructions(it)
                         displayOriginalLink(it)
+                        updateCategorySpinner(it.category)
                     }
                 }
             }
@@ -123,6 +138,78 @@ class RecipeDetailActivity : AppCompatActivity() {
             }
             viewModel.setScalingFactor(scalingFactor)
         }
+    }
+    
+    /**
+     * Sets up category selector and wires it to ViewModel.
+     * Requirements 9.2, 9.4: Add category selector, populate with Category enum values
+     */
+    private fun setupCategorySelector() {
+        // Create list of categories excluding UNCATEGORIZED (it's the default/null state)
+        val categories = listOf(
+            Category.BREAKFAST,
+            Category.LUNCH,
+            Category.DINNER,
+            Category.DESSERT,
+            Category.DRINK,
+            Category.SAUCE,
+            Category.UNCATEGORIZED
+        )
+        
+        // Create display names for categories
+        val categoryNames = categories.map { category ->
+            when (category) {
+                Category.BREAKFAST -> getString(R.string.category_breakfast)
+                Category.LUNCH -> getString(R.string.category_lunch)
+                Category.DINNER -> getString(R.string.category_dinner)
+                Category.DESSERT -> getString(R.string.category_dessert)
+                Category.DRINK -> getString(R.string.category_drink)
+                Category.SAUCE -> getString(R.string.category_sauce)
+                Category.UNCATEGORIZED -> getString(R.string.uncategorized)
+            }
+        }
+        
+        // Set up adapter
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categoryNames)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        categorySpinner.adapter = adapter
+        
+        // Set up selection listener
+        categorySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                // Avoid triggering update when we're programmatically setting the spinner
+                if (!isUpdatingCategorySpinner) {
+                    val selectedCategory = categories[position]
+                    viewModel.updateCategory(selectedCategory)
+                }
+            }
+            
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Do nothing
+            }
+        }
+    }
+    
+    /**
+     * Updates the category spinner to show the current category selection.
+     * Requirement 9.9: Show current category selection
+     */
+    private fun updateCategorySpinner(category: Category?) {
+        isUpdatingCategorySpinner = true
+        
+        val selectedCategory = category ?: Category.UNCATEGORIZED
+        val position = when (selectedCategory) {
+            Category.BREAKFAST -> 0
+            Category.LUNCH -> 1
+            Category.DINNER -> 2
+            Category.DESSERT -> 3
+            Category.DRINK -> 4
+            Category.SAUCE -> 5
+            Category.UNCATEGORIZED -> 6
+        }
+        
+        categorySpinner.setSelection(position)
+        isUpdatingCategorySpinner = false
     }
     
     /**
