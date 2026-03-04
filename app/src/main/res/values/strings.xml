@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Recipe Bookmarks</string>
+    <string name="search_recipes">Search recipes</string>
+    <string name="uncategorized">Uncategorized</string>
+    <string name="all_categories">All Categories</string>
+    <string name="no_results_found">No results found</string>
+    
+    <!-- Recipe Detail Strings -->
+    <string name="yield_label">Yield:</string>
+    <string name="serving_size_label">Serving Size:</string>
+    <string name="ingredients_header">Ingredients</string>
+    <string name="instructions_header">Instructions</string>
+    <string name="nutrition_header">Nutrition Information</string>
+    <string name="nutrition_unavailable">Nutritional data unavailable</string>
+    <string name="original_link_label">Original Recipe</string>
+    <string name="scaling_label">Scale Recipe:</string>
+    <string name="scaling_1x">1.0x</string>
+    <string name="scaling_1_5x">1.5x</string>
+    <string name="scaling_2x">2.0x</string>
+    <string name="scaling_warning">Note: Instructions may need modification based on the selected quantity.</string>
+</resources>
