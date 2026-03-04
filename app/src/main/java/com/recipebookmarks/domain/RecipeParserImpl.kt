@@ -47,39 +47,67 @@ class RecipeParserImpl : RecipeParser {
     private fun parseJsonLd(document: Document, sourceUrl: String): ParseResult {
         try {
             val scriptElements = document.select("script[type=application/ld+json]")
+            android.util.Log.d("RecipeParserImpl", "Found ${scriptElements.size} JSON-LD script tags")
             
             for (script in scriptElements) {
                 val jsonText = script.html()
+                android.util.Log.d("RecipeParserImpl", "JSON-LD content: ${jsonText.take(200)}...")
+                
                 val jsonElement = JsonParser.parseString(jsonText)
                 
                 // Handle both single object and array of objects
                 val recipes = when {
                     jsonElement.isJsonArray -> {
+                        android.util.Log.d("RecipeParserImpl", "JSON-LD is an array")
                         jsonElement.asJsonArray.filter { 
                             it.isJsonObject && isRecipeType(it.asJsonObject)
                         }.map { it.asJsonObject }
                     }
                     jsonElement.isJsonObject && isRecipeType(jsonElement.asJsonObject) -> {
+                        android.util.Log.d("RecipeParserImpl", "JSON-LD is a Recipe object")
                         listOf(jsonElement.asJsonObject)
                     }
-                    else -> emptyList()
+                    jsonElement.isJsonObject -> {
+                        android.util.Log.d("RecipeParserImpl", "JSON-LD is an object but not a Recipe. Type: ${jsonElement.asJsonObject.get("@type")}")
+                        emptyList()
+                    }
+                    else -> {
+                        android.util.Log.d("RecipeParserImpl", "JSON-LD is neither array nor object")
+                        emptyList()
+                    }
                 }
                 
                 if (recipes.isNotEmpty()) {
+                    android.util.Log.d("RecipeParserImpl", "Found ${recipes.size} recipe(s) in JSON-LD")
                     val recipeJson = recipes.first()
                     return parseJsonLdRecipe(recipeJson, sourceUrl)
                 }
             }
             
+            android.util.Log.w("RecipeParserImpl", "No recipe data found in JSON-LD")
             return ParseResult.Failure(ParseError.NO_RECIPE_DATA)
         } catch (e: Exception) {
+            android.util.Log.e("RecipeParserImpl", "Error parsing JSON-LD", e)
             return ParseResult.Failure(ParseError.INVALID_HTML)
         }
     }
 
     private fun isRecipeType(json: JsonObject): Boolean {
-        val type = json.get("@type")?.asString ?: return false
-        return type.equals("Recipe", ignoreCase = true)
+        val typeElement = json.get("@type") ?: return false
+        
+        return when {
+            typeElement.isJsonPrimitive -> {
+                val type = typeElement.asString
+                type.equals("Recipe", ignoreCase = true)
+            }
+            typeElement.isJsonArray -> {
+                // @type can be an array like ["Recipe", "NewsArticle"]
+                typeElement.asJsonArray.any { 
+                    it.isJsonPrimitive && it.asString.equals("Recipe", ignoreCase = true)
+                }
+            }
+            else -> false
+        }
     }
 
     private fun parseJsonLdRecipe(json: JsonObject, sourceUrl: String): ParseResult {

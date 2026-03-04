@@ -10,7 +10,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.RecipeBookmarks">
+        android:theme="@style/Theme.RecipeBookmarks"
+        android:usesCleartextTraffic="true">
         
         <activity
             android:name=".ui.RecipeListActivity"
@@ -30,7 +31,7 @@
         <activity
             android:name=".ui.ShareReceiverActivity"
             android:exported="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            android:theme="@style/Theme.AppCompat.Translucent">
             <!-- Handle single URL sharing -->
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />

@@ -2,6 +2,7 @@ package com.recipebookmarks.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -23,8 +24,15 @@ class ShareReceiverActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
+        Log.d("ShareReceiverActivity", "onCreate called")
+        Log.d("ShareReceiverActivity", "Intent action: ${intent.action}")
+        Log.d("ShareReceiverActivity", "Intent type: ${intent.type}")
+        Log.d("ShareReceiverActivity", "Intent extras: ${intent.extras?.keySet()?.joinToString()}")
+        
         // Extract URLs from intent
         val urls = extractUrlsFromIntent(intent)
+        
+        Log.d("ShareReceiverActivity", "Extracted URLs: $urls")
         
         if (urls.isEmpty()) {
             Toast.makeText(this, "No URLs found to import", Toast.LENGTH_SHORT).show()
@@ -39,17 +47,29 @@ class ShareReceiverActivity : AppCompatActivity() {
     private fun extractUrlsFromIntent(intent: Intent): List<String> {
         val urls = mutableListOf<String>()
         
+        Log.d("ShareReceiverActivity", "Extracting URLs from intent")
+        
         when (intent.action) {
             Intent.ACTION_SEND -> {
+                Log.d("ShareReceiverActivity", "ACTION_SEND detected")
                 // Single URL shared
                 intent.getStringExtra(Intent.EXTRA_TEXT)?.let { text ->
-                    extractUrlFromText(text)?.let { urls.add(it) }
+                    Log.d("ShareReceiverActivity", "EXTRA_TEXT: $text")
+                    extractUrlFromText(text)?.let { 
+                        urls.add(it)
+                        Log.d("ShareReceiverActivity", "Extracted URL: $it")
+                    }
                 }
             }
             Intent.ACTION_SEND_MULTIPLE -> {
+                Log.d("ShareReceiverActivity", "ACTION_SEND_MULTIPLE detected")
                 // Multiple URLs shared (e.g., from bookmark folder)
                 intent.getStringArrayListExtra(Intent.EXTRA_TEXT)?.forEach { text ->
-                    extractUrlFromText(text)?.let { urls.add(it) }
+                    Log.d("ShareReceiverActivity", "EXTRA_TEXT item: $text")
+                    extractUrlFromText(text)?.let { 
+                        urls.add(it)
+                        Log.d("ShareReceiverActivity", "Extracted URL: $it")
+                    }
                 }
             }
         }
@@ -89,6 +109,11 @@ class ShareReceiverActivity : AppCompatActivity() {
     }
     
     private fun handleImportComplete(workInfo: WorkInfo, totalUrls: Int) {
+        // Check if activity is finishing to avoid window leak
+        if (isFinishing) {
+            return
+        }
+        
         val outputData = workInfo.outputData
         val successCount = outputData.getInt(ImportWorker.KEY_SUCCESS_COUNT, 0)
         val failureCount = outputData.getInt(ImportWorker.KEY_FAILURE_COUNT, 0)
@@ -107,6 +132,11 @@ class ShareReceiverActivity : AppCompatActivity() {
     }
     
     private fun handleSingleUrlResult(success: Boolean, @Suppress("UNUSED_PARAMETER") url: String?, errorName: String?) {
+        // Check if activity is finishing to avoid window leak
+        if (isFinishing) {
+            return
+        }
+        
         if (success) {
             // Requirement 11.9: Show success confirmation for single URL imports
             Toast.makeText(
@@ -128,6 +158,7 @@ class ShareReceiverActivity : AppCompatActivity() {
                 .setTitle("Import Failed")
                 .setMessage(errorMessage)
                 .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+                .setOnDismissListener { finish() }
                 .show()
         }
     }
@@ -138,6 +169,11 @@ class ShareReceiverActivity : AppCompatActivity() {
         failureUrls: Array<String>,
         failureErrors: Array<String>
     ) {
+        // Check if activity is finishing to avoid window leak
+        if (isFinishing) {
+            return
+        }
+        
         // Requirement 11.12: Show import summary for multi-URL imports with success/failure counts
         val message = ImportNotificationHelper.getMultiUrlSummaryMessage(
             successCount,
@@ -150,6 +186,7 @@ class ShareReceiverActivity : AppCompatActivity() {
             .setTitle("Import Summary")
             .setMessage(message)
             .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+            .setOnDismissListener { finish() }
             .show()
     }
 }
