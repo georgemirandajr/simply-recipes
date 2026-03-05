@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Recipe Bookmarks</string>
+    <string name="app_name">Simply Recipes</string>
     <string name="search_recipes">Search recipes</string>
     <string name="uncategorized">Uncategorized</string>
     <string name="all_categories">All Categories</string>

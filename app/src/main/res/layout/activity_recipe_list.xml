@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@drawable/gradient_background">
 
     <!-- Header with kitchen icon branding -->
     <ImageView
@@ -14,6 +15,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"
         android:src="@drawable/kitchen_icon"
+        android:tint="@null"
         android:contentDescription="@string/app_name" />
 
     <!-- Search input field -->
