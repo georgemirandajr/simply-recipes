@@ -7,5 +7,9 @@ enum class Category {
     DESSERT,
     DRINK,
     SAUCE,
+    APPETIZER,
+    SIDE,
+    SOUP,
+    SALAD,
     UNCATEGORIZED
 }
