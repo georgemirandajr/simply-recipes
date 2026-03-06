@@ -292,26 +292,26 @@ This implementation adds a fallback mechanism for recipe imports when structured
     - Test delete cancellation keeps recipe
     - Test fallback message visibility
 
-- [ ] 10. Update RecipeListAdapter for fallback indicators and delete
-  - [ ] 10.1 Add fallback indicator and delete button to item_recipe.xml
+- [x] 10. Update RecipeListAdapter for fallback indicators and delete
+  - [x] 10.1 Add fallback indicator and delete button to item_recipe.xml
     - Add TextView for fallback indicator
     - Add ImageButton for delete action
     - Style appropriately
     - _Requirements: 6.2, 8.1_
 
-  - [ ] 10.2 Add onDeleteClick callback to RecipeListAdapter constructor
+  - [x] 10.2 Add onDeleteClick callback to RecipeListAdapter constructor
     - Add parameter: onDeleteClick: (Recipe) -> Unit
     - Pass to RecipeViewHolder
     - _Requirements: 8.1_
 
-  - [ ] 10.3 Update RecipeViewHolder.bind method
+  - [x] 10.3 Update RecipeViewHolder.bind method
     - Check recipe.isFallback
     - Show fallback indicator TextView if true, hide if false
     - Set fallback indicator text from string resource
     - Set delete button click listener to call onDeleteClick
     - _Requirements: 6.2, 8.1_
 
-  - [ ] 10.4 Write unit tests for RecipeListAdapter
+  - [x] 10.4 Write unit tests for RecipeListAdapter
     - Test fallback indicator visibility for fallback recipes
     - Test fallback indicator hidden for non-fallback recipes
     - Test delete button click triggers callback

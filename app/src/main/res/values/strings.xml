@@ -37,6 +37,7 @@
     <string name="edit_button">Edit</string>
     <string name="delete_button">Delete</string>
     <string name="fallback_message">This is a fallback recipe with limited data</string>
+    <string name="fallback_indicator">Limited data - click to edit</string>
     <string name="delete_confirmation_title">Delete Recipe</string>
     <string name="delete_confirmation_message">Are you sure you want to delete "%1$s"?</string>
     <string name="delete_confirm">Delete</string>

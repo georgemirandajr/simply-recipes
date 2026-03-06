@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="navy_200">#273756</color>
+    <color name="navy_400">#1f2d47</color>
     <color name="navy_500">#1b263b</color>
     <color name="navy_700">#151d2e</color>
     <color name="steelblue_200">#8fa1b8</color>

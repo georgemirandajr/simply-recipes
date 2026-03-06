@@ -50,13 +50,18 @@ class RecipeListActivity : AppCompatActivity() {
         recipeRecyclerView.layoutManager = LinearLayoutManager(this)
         
         // Set up RecyclerView adapter with click listener
-        adapter = RecipeListAdapter { recipe ->
-            // Navigate to RecipeDetailActivity with recipe ID
-            val intent = Intent(this, RecipeDetailActivity::class.java).apply {
-                putExtra(EXTRA_RECIPE_ID, recipe.id)
+        adapter = RecipeListAdapter(
+            onRecipeClick = { recipe ->
+                // Navigate to RecipeDetailActivity with recipe ID
+                val intent = Intent(this, RecipeDetailActivity::class.java).apply {
+                    putExtra(EXTRA_RECIPE_ID, recipe.id)
+                }
+                startActivity(intent)
+            },
+            onDeleteClick = { recipe ->
+                handleDeleteRecipe(recipe)
             }
-            startActivity(intent)
-        }
+        )
         recipeRecyclerView.adapter = adapter
 
         // Set up category filter spinner
@@ -126,6 +131,11 @@ class RecipeListActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun handleDeleteRecipe(recipe: com.recipebookmarks.data.Recipe) {
+        // Placeholder for delete functionality - will be implemented in task 11
+        // This prevents compilation errors for now
     }
 
     companion object {
