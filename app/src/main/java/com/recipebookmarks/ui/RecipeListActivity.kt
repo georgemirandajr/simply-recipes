@@ -79,7 +79,7 @@ class RecipeListActivity : AppCompatActivity() {
             android.R.layout.simple_spinner_item,
             categories
         )
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
         categoryFilterSpinner.adapter = spinnerAdapter
 
         // Add spinner selection listener to filter recipes

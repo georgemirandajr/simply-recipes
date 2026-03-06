@@ -29,6 +29,7 @@ class ImportService(
     suspend fun handleSharedUrls(urls: List<String>): ImportSummary {
         var successCount = 0
         val failures = mutableListOf<ImportFailure>()
+        val fallbackUrls = mutableListOf<String>()  // Track fallback recipes
         
         for (url in urls) {
             try {
@@ -50,7 +51,14 @@ class ImportService(
                                 // Step 4: Insert recipe into repository
                                 val recipeId = recipeRepository.insertRecipe(recipeWithUrl)
                                 
-                                Log.d(TAG, "Successfully imported recipe from $url with ID: $recipeId")
+                                // Track if this was a fallback
+                                if (recipeWithUrl.isFallback) {
+                                    fallbackUrls.add(url)
+                                    Log.d(TAG, "Created fallback recipe from $url with ID: $recipeId")
+                                } else {
+                                    Log.d(TAG, "Successfully imported recipe from $url with ID: $recipeId")
+                                }
+                                
                                 successCount++
                             }
                             is ParseResult.Failure -> {
@@ -94,10 +102,11 @@ class ImportService(
         val summary = ImportSummary(
             successCount = successCount,
             failureCount = failures.size,
-            failures = failures
+            failures = failures,
+            fallbackCount = fallbackUrls.size  // Set fallback count
         )
         
-        Log.d(TAG, "Import complete: $successCount successes, ${failures.size} failures")
+        Log.d(TAG, "Import complete: $successCount successes (${fallbackUrls.size} fallbacks), ${failures.size} failures")
         return summary
     }
 }
@@ -108,7 +117,8 @@ class ImportService(
 data class ImportSummary(
     val successCount: Int,
     val failureCount: Int,
-    val failures: List<ImportFailure>
+    val failures: List<ImportFailure>,
+    val fallbackCount: Int = 0
 ) : java.io.Serializable
 
 /**

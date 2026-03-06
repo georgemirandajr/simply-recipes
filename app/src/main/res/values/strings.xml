@@ -28,4 +28,17 @@
     <string name="category_dessert">Dessert</string>
     <string name="category_drink">Drink</string>
     <string name="category_sauce">Sauce</string>
+    <string name="category_appetizer">Appetizer</string>
+    <string name="category_side">Side</string>
+    <string name="category_soup">Soup</string>
+    <string name="category_salad">Salad</string>
+    
+    <!-- Edit and Delete Strings -->
+    <string name="edit_button">Edit</string>
+    <string name="delete_button">Delete</string>
+    <string name="fallback_message">This is a fallback recipe with limited data</string>
+    <string name="delete_confirmation_title">Delete Recipe</string>
+    <string name="delete_confirmation_message">Are you sure you want to delete "%1$s"?</string>
+    <string name="delete_confirm">Delete</string>
+    <string name="delete_cancel">Cancel</string>
 </resources>

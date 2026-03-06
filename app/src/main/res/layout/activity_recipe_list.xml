@@ -15,7 +15,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"
         android:src="@drawable/kitchen_icon"
-        android:tint="@null"
+        app:tint="@null"
         android:contentDescription="@string/app_name" />
 
     <!-- Search input field -->
@@ -25,6 +25,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/search_recipes"
         android:inputType="text"
+        android:textColor="@color/navy_700"
         android:layout_marginBottom="8dp" />
 
     <!-- Category filter spinner -->

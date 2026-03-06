@@ -38,56 +38,63 @@ class RecipeParserImpl : RecipeParser {
                 return@withContext rdfaResult
             }
             
-            ParseResult.Failure(ParseError.NO_RECIPE_DATA)
+            // All parsing methods failed - create fallback recipe
+            createFallbackRecipe(html, sourceUrl)
         } catch (e: Exception) {
-            ParseResult.Failure(ParseError.INVALID_HTML)
+            // Even on exception, try to create fallback
+            createFallbackRecipe(html, sourceUrl)
+        }
+    }
+
+    override fun extractPageTitle(html: String): String {
+        return try {
+            val document = Jsoup.parse(html)
+            val title = document.select("title").text().trim()
+            
+            when {
+                title.isNotBlank() -> title.take(200)  // Truncate to 200 chars
+                else -> ""
+            }
+        } catch (e: Exception) {
+            ""
         }
     }
 
     private fun parseJsonLd(document: Document, sourceUrl: String): ParseResult {
         try {
             val scriptElements = document.select("script[type=application/ld+json]")
-            android.util.Log.d("RecipeParserImpl", "Found ${scriptElements.size} JSON-LD script tags")
             
             for (script in scriptElements) {
                 val jsonText = script.html()
-                android.util.Log.d("RecipeParserImpl", "JSON-LD content: ${jsonText.take(200)}...")
                 
                 val jsonElement = JsonParser.parseString(jsonText)
                 
                 // Handle both single object and array of objects
                 val recipes = when {
                     jsonElement.isJsonArray -> {
-                        android.util.Log.d("RecipeParserImpl", "JSON-LD is an array")
                         jsonElement.asJsonArray.filter { 
                             it.isJsonObject && isRecipeType(it.asJsonObject)
                         }.map { it.asJsonObject }
                     }
                     jsonElement.isJsonObject && isRecipeType(jsonElement.asJsonObject) -> {
-                        android.util.Log.d("RecipeParserImpl", "JSON-LD is a Recipe object")
                         listOf(jsonElement.asJsonObject)
                     }
                     jsonElement.isJsonObject -> {
-                        android.util.Log.d("RecipeParserImpl", "JSON-LD is an object but not a Recipe. Type: ${jsonElement.asJsonObject.get("@type")}")
                         emptyList()
                     }
                     else -> {
-                        android.util.Log.d("RecipeParserImpl", "JSON-LD is neither array nor object")
                         emptyList()
                     }
                 }
                 
                 if (recipes.isNotEmpty()) {
-                    android.util.Log.d("RecipeParserImpl", "Found ${recipes.size} recipe(s) in JSON-LD")
                     val recipeJson = recipes.first()
                     return parseJsonLdRecipe(recipeJson, sourceUrl)
                 }
             }
             
-            android.util.Log.w("RecipeParserImpl", "No recipe data found in JSON-LD")
             return ParseResult.Failure(ParseError.NO_RECIPE_DATA)
         } catch (e: Exception) {
-            android.util.Log.e("RecipeParserImpl", "Error parsing JSON-LD", e)
             return ParseResult.Failure(ParseError.INVALID_HTML)
         }
     }
@@ -402,5 +409,37 @@ class RecipeParserImpl : RecipeParser {
         } catch (e: Exception) {
             return null
         }
+    }
+
+    private fun generateNameFromUrl(url: String): String {
+        return try {
+            // Use java.net.URL for better unit test compatibility
+            val javaUrl = java.net.URL(url)
+            val host = javaUrl.host
+            when {
+                host.isNullOrBlank() -> "Untitled Recipe"
+                else -> host.removePrefix("www.")
+            }
+        } catch (e: Exception) {
+            "Untitled Recipe"
+        }
+    }
+
+    private fun createFallbackRecipe(html: String, sourceUrl: String): ParseResult {
+        val pageTitle = extractPageTitle(html)
+        val recipeName = when {
+            pageTitle.isNotBlank() -> pageTitle
+            else -> generateNameFromUrl(sourceUrl)
+        }
+        
+        val fallbackRecipe = Recipe(
+            name = recipeName,
+            ingredients = emptyList(),
+            instructions = emptyList(),
+            originalUrl = sourceUrl,
+            isFallback = true
+        )
+        
+        return ParseResult.Success(fallbackRecipe)
     }
 }

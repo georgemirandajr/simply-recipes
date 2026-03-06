@@ -47,6 +47,9 @@ class RecipeDetailActivity : AppCompatActivity() {
     private lateinit var scalingRadioGroup: RadioGroup
     private lateinit var scalingWarningTextView: TextView
     private lateinit var categorySpinner: Spinner
+    private lateinit var editButton: android.widget.Button
+    private lateinit var deleteButton: android.widget.Button
+    private lateinit var fallbackMessageTextView: TextView
     
     private var isUpdatingCategorySpinner = false
     
@@ -75,6 +78,9 @@ class RecipeDetailActivity : AppCompatActivity() {
         scalingRadioGroup = findViewById(R.id.scalingRadioGroup)
         scalingWarningTextView = findViewById(R.id.scalingWarningTextView)
         categorySpinner = findViewById(R.id.categorySpinner)
+        editButton = findViewById(R.id.editButton)
+        deleteButton = findViewById(R.id.deleteButton)
+        fallbackMessageTextView = findViewById(R.id.fallbackMessageTextView)
         
         // Set up scaling factor selector
         // Requirement 8.5: Update scaling factor selector to change ViewModel state
@@ -83,6 +89,10 @@ class RecipeDetailActivity : AppCompatActivity() {
         // Set up category selector
         // Requirements 9.2, 9.4, 9.9: Add category selector, populate with Category enum values, show current category
         setupCategorySelector()
+        
+        // Set up edit and delete buttons
+        // Requirements 3.3, 7.1, 8.2: Wire edit and delete buttons
+        setupEditAndDeleteButtons()
         
         // Observe recipe data and update yield/serving size
         // Requirements 3.1, 3.2, 3.3: Display yield and serving size information
@@ -96,6 +106,7 @@ class RecipeDetailActivity : AppCompatActivity() {
                         displayInstructions(it)
                         displayOriginalLink(it)
                         updateCategorySpinner(it.category)
+                        displayFallbackMessage(it)
                     }
                 }
             }
@@ -153,6 +164,10 @@ class RecipeDetailActivity : AppCompatActivity() {
             Category.DESSERT,
             Category.DRINK,
             Category.SAUCE,
+            Category.APPETIZER,
+            Category.SIDE,
+            Category.SOUP,
+            Category.SALAD,
             Category.UNCATEGORIZED
         )
         
@@ -165,6 +180,10 @@ class RecipeDetailActivity : AppCompatActivity() {
                 Category.DESSERT -> getString(R.string.category_dessert)
                 Category.DRINK -> getString(R.string.category_drink)
                 Category.SAUCE -> getString(R.string.category_sauce)
+                Category.APPETIZER -> getString(R.string.category_appetizer)
+                Category.SIDE -> getString(R.string.category_side)
+                Category.SOUP -> getString(R.string.category_soup)
+                Category.SALAD -> getString(R.string.category_salad)
                 Category.UNCATEGORIZED -> getString(R.string.uncategorized)
             }
         }
@@ -205,7 +224,11 @@ class RecipeDetailActivity : AppCompatActivity() {
             Category.DESSERT -> 3
             Category.DRINK -> 4
             Category.SAUCE -> 5
-            Category.UNCATEGORIZED -> 6
+            Category.APPETIZER -> 6
+            Category.SIDE -> 7
+            Category.SOUP -> 8
+            Category.SALAD -> 9
+            Category.UNCATEGORIZED -> 10
         }
         
         categorySpinner.setSelection(position)
@@ -396,5 +419,64 @@ class RecipeDetailActivity : AppCompatActivity() {
             // Hide the link if no URL is available
             originalLinkTextView.visibility = android.view.View.GONE
         }
+    }
+    
+    /**
+     * Sets up edit and delete button click listeners.
+     * Requirements 3.3, 7.1, 8.2: Wire edit and delete buttons
+     */
+    private fun setupEditAndDeleteButtons() {
+        // Requirement 7.1: Edit button launches RecipeEditorActivity
+        editButton.setOnClickListener {
+            val intent = Intent(this, RecipeEditorActivity::class.java).apply {
+                putExtra(RecipeEditorActivity.EXTRA_RECIPE_ID, viewModel.recipe.value?.id ?: -1L)
+            }
+            startActivity(intent)
+        }
+        
+        // Requirement 8.2: Delete button shows confirmation dialog
+        deleteButton.setOnClickListener {
+            viewModel.recipe.value?.let { recipe ->
+                showDeleteConfirmation(recipe)
+            }
+        }
+    }
+    
+    /**
+     * Displays fallback message when recipe is a fallback recipe.
+     * Requirement 3.3: Display a message indicating this is a fallback recipe with limited data
+     */
+    private fun displayFallbackMessage(recipe: com.recipebookmarks.data.Recipe) {
+        if (recipe.isFallback) {
+            fallbackMessageTextView.visibility = android.view.View.VISIBLE
+        } else {
+            fallbackMessageTextView.visibility = android.view.View.GONE
+        }
+    }
+    
+    /**
+     * Shows confirmation dialog for recipe deletion.
+     * Requirements 8.3, 8.4, 8.5, 8.6, 8.9: Show confirmation dialog with recipe name
+     */
+    private fun showDeleteConfirmation(recipe: com.recipebookmarks.data.Recipe) {
+        // Requirement 8.3: Display a confirmation dialog when user clicks delete button
+        // Requirement 8.4: Display the recipe name being deleted in confirmation dialog
+        val message = getString(R.string.delete_confirmation_message, recipe.name)
+        
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle(R.string.delete_confirmation_title)
+            .setMessage(message)
+            // Requirement 8.5: Provide a confirm action in confirmation dialog
+            .setPositiveButton(R.string.delete_confirm) { _, _ ->
+                // Requirement 8.7: Remove the Recipe_Bookmark from database when user confirms deletion
+                viewModel.deleteRecipe()
+                // Requirement 8.9: Navigate user back to Recipe_List_View when recipe is deleted
+                finish()
+            }
+            // Requirement 8.6: Provide a cancel action in confirmation dialog
+            .setNegativeButton(R.string.delete_cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 }

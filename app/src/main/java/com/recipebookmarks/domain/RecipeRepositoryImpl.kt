@@ -30,7 +30,7 @@ class RecipeRepositoryImpl(
     }
 
     override suspend fun updateRecipe(recipe: Recipe) {
-        recipeDao.update(recipe)
+        recipeDao.update(recipe.copy(updatedAt = System.currentTimeMillis()))
     }
 
     override suspend fun deleteRecipe(id: Long) {

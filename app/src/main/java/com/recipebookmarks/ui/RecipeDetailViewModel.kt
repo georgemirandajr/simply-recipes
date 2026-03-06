@@ -87,4 +87,14 @@ class RecipeDetailViewModel(
             }
         }
     }
+    
+    /**
+     * Deletes the current recipe from the database.
+     * Requirement 8.7: Remove the Recipe_Bookmark from database when user confirms deletion
+     */
+    fun deleteRecipe() {
+        viewModelScope.launch {
+            repository.deleteRecipe(recipeId)
+        }
+    }
 }
