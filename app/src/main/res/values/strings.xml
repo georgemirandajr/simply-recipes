@@ -42,4 +42,8 @@
     <string name="delete_confirmation_message">Are you sure you want to delete "%1$s"?</string>
     <string name="delete_confirm">Delete</string>
     <string name="delete_cancel">Cancel</string>
+    <string name="delete_recipe_title">Delete Recipe</string>
+    <string name="delete_recipe_message">Are you sure you want to delete "%1$s"?</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
 </resources>

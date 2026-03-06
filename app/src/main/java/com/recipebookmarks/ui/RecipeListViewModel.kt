@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 /**
  * ViewModel for the recipe list screen.
@@ -97,5 +98,16 @@ class RecipeListViewModel(
      */
     fun clearCategoryFilter() {
         _categoryFilter.value = null
+    }
+
+    /**
+     * Deletes a recipe from the repository.
+     * The recipe list will update automatically via Flow.
+     * Requirement 8.10: Delete recipe from list view
+     */
+    fun deleteRecipe(recipeId: Long) {
+        viewModelScope.launch {
+            repository.deleteRecipe(recipeId)
+        }
     }
 }

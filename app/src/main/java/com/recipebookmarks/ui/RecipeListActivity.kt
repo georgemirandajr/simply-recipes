@@ -134,8 +134,14 @@ class RecipeListActivity : AppCompatActivity() {
     }
 
     private fun handleDeleteRecipe(recipe: com.recipebookmarks.data.Recipe) {
-        // Placeholder for delete functionality - will be implemented in task 11
-        // This prevents compilation errors for now
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle(getString(R.string.delete_recipe_title))
+            .setMessage(getString(R.string.delete_recipe_message, recipe.name))
+            .setPositiveButton(getString(R.string.delete)) { _, _ ->
+                viewModel.deleteRecipe(recipe.id)
+            }
+            .setNegativeButton(getString(R.string.cancel), null)
+            .show()
     }
 
     companion object {

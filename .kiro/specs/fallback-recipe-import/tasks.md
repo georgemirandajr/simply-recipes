@@ -316,23 +316,23 @@ This implementation adds a fallback mechanism for recipe imports when structured
     - Test fallback indicator hidden for non-fallback recipes
     - Test delete button click triggers callback
 
-- [ ] 11. Update RecipeListActivity to handle delete from list
-  - [ ] 11.1 Implement handleDeleteRecipe method in RecipeListActivity
+- [x] 11. Update RecipeListActivity to handle delete from list
+  - [x] 11.1 Implement handleDeleteRecipe method in RecipeListActivity
     - Create AlertDialog with recipe name in message
     - Add positive button that calls viewModel.deleteRecipe
     - Add negative button that dismisses dialog
     - _Requirements: 8.3, 8.4, 8.5, 8.6, 8.10_
 
-  - [ ] 11.2 Pass handleDeleteRecipe to RecipeListAdapter
+  - [x] 11.2 Pass handleDeleteRecipe to RecipeListAdapter
     - Update adapter initialization with onDeleteClick callback
     - _Requirements: 8.1, 8.10_
 
-  - [ ] 11.3 Add deleteRecipe method to RecipeListViewModel
+  - [x] 11.3 Add deleteRecipe method to RecipeListViewModel
     - Call repository.deleteRecipe with recipe id
     - Recipe list will update automatically via Flow
     - _Requirements: 8.10_
 
-  - [ ] 11.4 Write unit tests for RecipeListActivity
+  - [x] 11.4 Write unit tests for RecipeListActivity
     - Test delete button shows confirmation dialog
     - Test delete confirmation removes recipe from list
     - Test delete cancellation keeps recipe in list
