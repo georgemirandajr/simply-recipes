@@ -428,7 +428,7 @@ This implementation adds a fallback mechanism for recipe imports when structured
     - Test import → view → delete flow
     - Test import → delete from list flow
 
-- [ ] 16. Final checkpoint - Ensure all tests pass
+- [x] 16. Final checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Notes
