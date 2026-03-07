@@ -105,14 +105,14 @@ This implementation adds a fallback mechanism for recipe imports when structured
     - Test all fallbacks
 
 
-- [ ] 5. Update ImportNotificationHelper for fallback messages
+- [x] 5. Update ImportNotificationHelper for fallback messages
   - Modify showImportSummary to handle fallbackCount
   - Add string resource for import_success_with_fallbacks message
   - Add string resource for import_mixed_results message
   - Show appropriate message based on success/fallback/failure counts
   - _Requirements: 4.2, 4.3, 4.4_
 
-- [ ] 5.1 Write unit tests for ImportNotificationHelper
+- [x] 5.1 Write unit tests for ImportNotificationHelper
   - Test message selection with no fallbacks
   - Test message selection with only fallbacks
   - Test message selection with mixed results

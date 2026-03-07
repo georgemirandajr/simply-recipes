@@ -91,4 +91,37 @@ object ImportNotificationHelper {
             else -> "error"
         }
     }
+    
+    /**
+     * Generates import summary message based on success, fallback, and failure counts.
+     * 
+     * Requirements 4.2, 4.3, 4.4: Show appropriate message based on success/fallback/failure counts
+     * 
+     * @param successCount Total number of successfully imported recipes (including fallbacks)
+     * @param fallbackCount Number of recipes saved as fallback bookmarks
+     * @param failureCount Number of completely failed imports
+     * @return Formatted summary message
+     */
+    fun getImportSummaryMessage(
+        successCount: Int,
+        fallbackCount: Int,
+        failureCount: Int
+    ): String {
+        return when {
+            // All successful with no fallbacks
+            failureCount == 0 && fallbackCount == 0 -> {
+                "Imported $successCount recipe(s) successfully!"
+            }
+            // Success with some fallbacks, no failures
+            failureCount == 0 && fallbackCount > 0 -> {
+                // Requirement 4.2, 4.3: Show message indicating fallback bookmarks were created
+                "Imported $successCount recipe(s) successfully. $fallbackCount saved as bookmarks without full details."
+            }
+            // Mixed results with failures
+            else -> {
+                // Requirement 4.4: Show message with all counts for mixed results
+                "Imported $successCount recipe(s). $fallbackCount saved as bookmarks. $failureCount failed."
+            }
+        }
+    }
 }

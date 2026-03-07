@@ -162,5 +162,100 @@ class ImportNotificationHelperTest {
         val description = ImportNotificationHelper.getErrorDescription(ImportError.NETWORK_ERROR)
         assertEquals("error", description)
     }
+    
+    /**
+     * Test that verifies message selection with no fallbacks.
+     * When all imports are successful with structured data, should show standard success message.
+     * Validates Requirements 4.2, 4.3, 4.4
+     */
+    @Test
+    fun `showImportSummary should show standard success message with no fallbacks`() {
+        // Requirements 4.2, 4.3, 4.4: Show appropriate message based on success/fallback/failure counts
+        val message = ImportNotificationHelper.getImportSummaryMessage(
+            successCount = 5,
+            fallbackCount = 0,
+            failureCount = 0
+        )
+        
+        // Should not mention fallbacks when there are none
+        assertFalse(message.contains("bookmark"))
+        assertTrue(message.contains("5"))
+    }
+    
+    /**
+     * Test that verifies message selection with only fallbacks.
+     * When all imports result in fallback recipes, should indicate bookmarks were created.
+     * Validates Requirements 4.2, 4.3, 4.4
+     */
+    @Test
+    fun `showImportSummary should show fallback message when only fallbacks exist`() {
+        // Requirements 4.2, 4.3, 4.4: Show appropriate message based on success/fallback/failure counts
+        val message = ImportNotificationHelper.getImportSummaryMessage(
+            successCount = 3,
+            fallbackCount = 3,
+            failureCount = 0
+        )
+        
+        // Should mention bookmarks when all are fallbacks
+        assertTrue(message.contains("bookmark"))
+        assertTrue(message.contains("3"))
+    }
+    
+    /**
+     * Test that verifies message selection with mixed results.
+     * When imports have mix of success, fallback, and failures, should show all counts.
+     * Validates Requirements 4.2, 4.3, 4.4
+     */
+    @Test
+    fun `showImportSummary should show mixed results message with all counts`() {
+        // Requirements 4.2, 4.3, 4.4: Show appropriate message based on success/fallback/failure counts
+        val message = ImportNotificationHelper.getImportSummaryMessage(
+            successCount = 5,
+            fallbackCount = 2,
+            failureCount = 1
+        )
+        
+        // Should show all three counts
+        assertTrue(message.contains("5"))
+        assertTrue(message.contains("2"))
+        assertTrue(message.contains("1"))
+        assertTrue(message.contains("bookmark"))
+    }
+    
+    /**
+     * Test that verifies message with successes and fallbacks but no failures.
+     * Validates Requirements 4.2, 4.3
+     */
+    @Test
+    fun `showImportSummary should show success with fallbacks message when no failures`() {
+        // Requirements 4.2, 4.3: Show appropriate message for success with fallbacks
+        val message = ImportNotificationHelper.getImportSummaryMessage(
+            successCount = 4,
+            fallbackCount = 2,
+            failureCount = 0
+        )
+        
+        // Should mention both successes and fallbacks
+        assertTrue(message.contains("4"))
+        assertTrue(message.contains("2"))
+        assertTrue(message.contains("bookmark"))
+        // Should not mention failures
+        assertFalse(message.contains("failed") || message.contains("Failed"))
+    }
+    
+    /**
+     * Test that verifies message with only failures.
+     * Edge case: all imports failed completely.
+     */
+    @Test
+    fun `showImportSummary should handle all failures case`() {
+        val message = ImportNotificationHelper.getImportSummaryMessage(
+            successCount = 0,
+            fallbackCount = 0,
+            failureCount = 3
+        )
+        
+        // Should indicate failures
+        assertTrue(message.contains("3"))
+    }
 }
-
