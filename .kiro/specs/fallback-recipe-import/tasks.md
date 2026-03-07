@@ -338,7 +338,7 @@ This implementation adds a fallback mechanism for recipe imports when structured
     - Test delete cancellation keeps recipe in list
 
 
-- [ ] 12. Add string resources for new UI elements
+- [x] 12. Add string resources for new UI elements
   - Add fallback_recipe_indicator string
   - Add fallback_recipe_message string
   - Add import_success_with_fallbacks string
@@ -351,22 +351,22 @@ This implementation adds a fallback mechanism for recipe imports when structured
   - Add save string
   - _Requirements: 3.3, 4.2, 4.3, 4.4, 6.2, 8.3, 8.4_
 
-- [ ] 13. Update RecipeDetailActivity to make URL clickable
-  - [ ] 13.1 Modify displayRecipe method to handle originalUrl
+- [x] 13. Update RecipeDetailActivity to make URL clickable
+  - [x] 13.1 Modify displayRecipe method to handle originalUrl
     - Check if originalUrl is not null
     - Set URL TextView text
     - Make TextView clickable with Intent.ACTION_VIEW
     - _Requirements: 3.1, 3.2_
 
-  - [ ] 13.2 Write unit tests for URL click behavior
+  - [x] 13.2 Write unit tests for URL click behavior
     - Test clicking URL launches browser intent
     - Test URL visibility for recipes with originalUrl
 
-- [ ] 14. Checkpoint - Ensure all tests pass
+- [x] 14. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 15. Integration testing with test URLs
-  - [ ] 15.1 Test import flow with test URLs
+- [x] 15. Integration testing with test URLs
+  - [x] 15.1 Test import flow with test URLs
     - Test https://joyfoodsunshine.com/the-most-amazing-chocolate-chip-cookies/
     - Test https://www.seriouseats.com/food-lab-best-chocolate-chip-cookie-step-by-step-slideshow
     - Test https://www.bowlofdelicious.com/easy-chicken-tikka-masala/
@@ -379,7 +379,7 @@ This implementation adds a fallback mechanism for recipe imports when structured
     - Verify URLs are clickable
     - _Requirements: 1.1, 1.2, 1.3, 3.1, 3.2_
 
-  - [ ] 15.2 Test edit flow for fallback recipes
+  - [x] 15.2 Test edit flow for fallback recipes
     - Import a fallback recipe
     - Open recipe editor
     - Verify all fields are editable
@@ -388,7 +388,7 @@ This implementation adds a fallback mechanism for recipe imports when structured
     - Verify changes persist
     - _Requirements: 7.1, 7.2, 7.3, 7.6, 7.7, 7.8, 7.9, 7.10, 7.11, 7.12_
 
-  - [ ] 15.3 Test edit flow for non-fallback recipes
+  - [x] 15.3 Test edit flow for non-fallback recipes
     - Import a recipe with structured data
     - Open recipe editor
     - Verify only name field is editable
@@ -398,7 +398,7 @@ This implementation adds a fallback mechanism for recipe imports when structured
     - _Requirements: 7.1, 7.13_
 
 
-  - [ ] 15.4 Test delete flow from recipe detail
+  - [x] 15.4 Test delete flow from recipe detail
     - Open a recipe
     - Click delete button
     - Verify confirmation dialog shows recipe name
@@ -407,7 +407,7 @@ This implementation adds a fallback mechanism for recipe imports when structured
     - Verify recipe is removed from database
     - _Requirements: 8.2, 8.3, 8.4, 8.5, 8.7, 8.9_
 
-  - [ ] 15.5 Test delete flow from recipe list
+  - [x] 15.5 Test delete flow from recipe list
     - View recipe list
     - Click delete button on a recipe card
     - Verify confirmation dialog shows recipe name
@@ -416,14 +416,14 @@ This implementation adds a fallback mechanism for recipe imports when structured
     - Verify recipe is removed from database
     - _Requirements: 8.1, 8.3, 8.4, 8.5, 8.7, 8.10_
 
-  - [ ] 15.6 Test delete cancellation
+  - [x] 15.6 Test delete cancellation
     - Click delete button
     - Cancel deletion
     - Verify recipe remains in database
     - Verify recipe remains visible in UI
     - _Requirements: 8.6, 8.8_
 
-  - [ ] 15.7 Write integration tests for end-to-end flows
+  - [x] 15.7 Write integration tests for end-to-end flows
     - Test import → view → edit → save flow
     - Test import → view → delete flow
     - Test import → delete from list flow

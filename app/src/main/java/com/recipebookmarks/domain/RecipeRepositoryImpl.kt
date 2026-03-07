@@ -41,4 +41,11 @@ class RecipeRepositoryImpl(
         // Implementation will be added in a later task
         TODO("Import from URL functionality will be implemented in task 14")
     }
+
+    /**
+     * Helper method for testing - gets all recipes synchronously
+     */
+    suspend fun getAllRecipesOnce(): List<Recipe> {
+        return recipeDao.getAllOnce()
+    }
 }

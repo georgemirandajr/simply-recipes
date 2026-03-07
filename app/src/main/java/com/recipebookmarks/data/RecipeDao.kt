@@ -25,4 +25,7 @@ interface RecipeDao {
 
     @Query("SELECT * FROM recipes WHERE category = :category ORDER BY createdAt DESC")
     fun getByCategory(category: Category): Flow<List<Recipe>>
+
+    @Query("SELECT * FROM recipes ORDER BY createdAt DESC")
+    suspend fun getAllOnce(): List<Recipe>
 }

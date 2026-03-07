@@ -46,4 +46,16 @@
     <string name="delete_recipe_message">Are you sure you want to delete "%1$s"?</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+    
+    <!-- Fallback Recipe Strings -->
+    <string name="fallback_recipe_indicator">Bookmark only</string>
+    <string name="fallback_recipe_message">This recipe was saved as a bookmark because structured data wasn\'t available. You can edit it to add ingredients and instructions, or visit the original URL to view the full recipe.</string>
+    
+    <!-- Import Notification Strings -->
+    <string name="import_success_with_fallbacks">Imported %1$d recipe(s) successfully. %2$d saved as bookmarks without full details.</string>
+    <string name="import_mixed_results">Imported %1$d recipe(s). %2$d saved as bookmarks. %3$d failed.</string>
+    
+    <!-- Recipe Editor Strings -->
+    <string name="edit_recipe_title">Edit Recipe</string>
+    <string name="save">Save</string>
 </resources>
