@@ -259,7 +259,7 @@ class RecipeParserImpl : RecipeParser {
                 return ParseResult.Failure(ParseError.NO_RECIPE_DATA)
             }
             
-            val recipeElement = recipeElements.first()
+            val recipeElement = recipeElements.first()!!
             
             // Extract name
             val name = recipeElement.select("[itemprop=name]").text()
@@ -279,9 +279,9 @@ class RecipeParserImpl : RecipeParser {
             
             // Extract instructions
             val instructionElements = recipeElement.select("[itemprop=recipeInstructions]")
-            val instructions = if (instructionElements.size == 1 && instructionElements.first().children().isNotEmpty()) {
+            val instructions = if (instructionElements.size == 1 && instructionElements.first()!!.children().isNotEmpty()) {
                 // Instructions might be in child elements
-                instructionElements.first().children().mapIndexed { index, element ->
+                instructionElements.first()!!.children().mapIndexed { index, element ->
                     Instruction(element.text(), index)
                 }
             } else {
@@ -343,7 +343,7 @@ class RecipeParserImpl : RecipeParser {
                 return ParseResult.Failure(ParseError.NO_RECIPE_DATA)
             }
             
-            val recipeElement = recipeElements.first()
+            val recipeElement = recipeElements.first()!!
             
             // Extract name
             val name = recipeElement.select("[property=name]").text()

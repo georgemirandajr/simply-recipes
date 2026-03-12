@@ -9,10 +9,10 @@ interface RecipeDao {
     suspend fun insert(recipe: Recipe): Long
 
     @Update
-    suspend fun update(recipe: Recipe)
+    suspend fun update(recipe: Recipe): Int
 
     @Query("DELETE FROM recipes WHERE id = :id")
-    suspend fun delete(id: Long)
+    suspend fun delete(id: Long): Int
 
     @Query("SELECT * FROM recipes ORDER BY createdAt DESC")
     fun getAll(): Flow<List<Recipe>>

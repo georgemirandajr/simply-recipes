@@ -99,6 +99,7 @@
                 android:id="@+id/categorySpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:popupBackground="?attr/colorSurface"
                 android:minHeight="48dp" />
         </LinearLayout>
 
