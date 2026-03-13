@@ -32,16 +32,32 @@ class RecipeDetailViewModel(
     private val _scalingFactor = MutableStateFlow(ScalingFactor.SINGLE)
     val scalingFactor: StateFlow<ScalingFactor> = _scalingFactor
 
+    // Edit mode state management
+    // Requirements 2.1, 2.7, 2.8, 2.9: Track edit mode state
+    private val _isEditMode = MutableStateFlow(false)
+    val isEditMode: StateFlow<Boolean> = _isEditMode
+
+    // Original recipe snapshot for cancel functionality
+    // Requirements 2.13, 2.14: Store original recipe data before editing
+    private val _originalRecipe = MutableStateFlow<Recipe?>(null)
+
     /**
      * Recipe data loaded from repository.
      * Requirement 1.2: Load recipe by ID from repository
      */
-    val recipe: StateFlow<Recipe?> = repository.getRecipeById(recipeId)
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = null
-        )
+    private val _recipe = MutableStateFlow<Recipe?>(null)
+    val recipe: StateFlow<Recipe?> = _recipe
+
+    init {
+        // Load recipe from repository
+        viewModelScope.launch {
+            repository.getRecipeById(recipeId).collect { loadedRecipe ->
+                if (!_isEditMode.value) {
+                    _recipe.value = loadedRecipe
+                }
+            }
+        }
+    }
 
     /**
      * Scaled ingredients calculated based on current scaling factor.
@@ -96,5 +112,53 @@ class RecipeDetailViewModel(
         viewModelScope.launch {
             repository.deleteRecipe(recipeId)
         }
+    }
+
+    /**
+     * Enters edit mode by capturing the current recipe as a snapshot.
+     * Requirements 2.1, 2.7, 2.8: Enable in-place editing mode
+     */
+    fun enterEditMode() {
+        _recipe.value?.let { currentRecipe ->
+            _originalRecipe.value = currentRecipe.copy()
+            _isEditMode.value = true
+        }
+    }
+
+    /**
+     * Saves changes by persisting the current recipe data and exiting edit mode.
+     * Requirements 2.10, 2.11, 2.12: Persist changes and return to read-only mode
+     */
+    fun saveChanges() {
+        viewModelScope.launch {
+            _recipe.value?.let { currentRecipe ->
+                val updatedRecipe = currentRecipe.copy(
+                    updatedAt = System.currentTimeMillis()
+                )
+                repository.updateRecipe(updatedRecipe)
+                _isEditMode.value = false
+                _originalRecipe.value = null
+            }
+        }
+    }
+
+    /**
+     * Cancels changes by restoring the original recipe data and exiting edit mode.
+     * Requirements 2.13, 2.14, 2.15, 2.16: Discard changes and return to read-only mode
+     */
+    fun cancelChanges() {
+        _originalRecipe.value?.let { original ->
+            _recipe.value = original
+        }
+        _isEditMode.value = false
+        _originalRecipe.value = null
+    }
+
+    /**
+     * Updates the current recipe data (used during edit mode).
+     * Requirements 2.2, 2.3, 2.4, 2.5, 2.6: Support editing recipe fields
+     */
+    fun updateRecipe(updatedRecipe: Recipe) {
+        _recipe.value = updatedRecipe
     }
 }

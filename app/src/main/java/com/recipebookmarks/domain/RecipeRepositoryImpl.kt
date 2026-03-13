@@ -48,4 +48,11 @@ class RecipeRepositoryImpl(
     suspend fun getAllRecipesOnce(): List<Recipe> {
         return recipeDao.getAllOnce()
     }
+
+    /**
+     * Helper method for testing - gets a recipe by ID synchronously
+     */
+    suspend fun getRecipeByIdSync(id: Long): Recipe? {
+        return recipeDao.getByIdOnce(id)
+    }
 }

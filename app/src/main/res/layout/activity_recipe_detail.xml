@@ -21,6 +21,18 @@
             android:textColor="@color/navy_700"
             android:paddingBottom="8dp" />
 
+        <EditText
+            android:id="@+id/recipeNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/navy_700"
+            android:paddingBottom="8dp"
+            android:visibility="gone"
+            android:inputType="text"
+            android:hint="Recipe Name" />
+
         <!-- Fallback Message -->
         <TextView
             android:id="@+id/fallbackMessageTextView"
@@ -59,6 +71,34 @@
                 android:backgroundTint="@color/navy_200" />
         </LinearLayout>
 
+        <!-- Save and Cancel Buttons (Edit Mode) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="16dp">
+
+            <Button
+                android:id="@+id/saveButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="@string/save_button"
+                android:backgroundTint="@color/navy_200"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/cancelButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:text="@string/cancel_button"
+                android:backgroundTint="@color/navy_200"
+                android:visibility="gone" />
+        </LinearLayout>
+
         <!-- Yield and Serving Size Section -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -73,11 +113,30 @@
                 android:textSize="14sp"
                 android:paddingBottom="4dp" />
 
+            <EditText
+                android:id="@+id/yieldEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:paddingBottom="4dp"
+                android:visibility="gone"
+                android:inputType="text"
+                android:hint="Yield (e.g., 4 servings)" />
+
             <TextView
                 android:id="@+id/servingSizeTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/servingSizeEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:visibility="gone"
+                android:inputType="text"
+                android:hint="Serving Size (e.g., 1 cup)" />
         </LinearLayout>
 
         <!-- Category Selection Section -->
@@ -228,6 +287,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/nutritionInfoEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:visibility="gone"
+                android:inputType="textMultiLine"
+                android:minLines="3"
+                android:gravity="start|top"
+                android:hint="Nutrition Info (e.g., Calories: 250\nProtein: 10g)" />
         </LinearLayout>
 
         <!-- Original Link Section -->

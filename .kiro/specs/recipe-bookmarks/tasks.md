@@ -245,7 +245,7 @@ The implementation follows an incremental approach: starting with core data mode
     - **Property 31: Empty search results message**
     - **Validates: Requirements 10.2, 10.4, 10.5**
 
-- [~] 11. Checkpoint - Ensure search and filtering work
+- [ ] 11. Checkpoint - Ensure search and filtering work
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 12. Implement recipe parsing from HTML
@@ -332,11 +332,11 @@ The implementation follows an incremental approach: starting with core data mode
     - Show progress indicator during import
     - _Requirements: 11.2, 11.3_
 
-- [~] 16. Checkpoint - Ensure URL import works end-to-end
+- [ ] 16. Checkpoint - Ensure URL import works end-to-end
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 17. Implement manual recipe entry UI
-  - [~] 17.1 Create ManualEntryActivity layout
+  - [ ] 17.1 Create ManualEntryActivity layout
     - Add EditText fields for recipe name, yield, serving size, original URL
     - Add RecyclerView or dynamic LinearLayout for ingredients list
     - Add RecyclerView or dynamic LinearLayout for instructions list
@@ -345,19 +345,19 @@ The implementation follows an incremental approach: starting with core data mode
     - Add "Save" and "Cancel" buttons
     - _Requirements: 12.3, 12.4, 12.5, 12.9, 12.15_
 
-  - [~] 17.2 Create ingredient entry UI components
+  - [ ] 17.2 Create ingredient entry UI components
     - Create ingredient item layout with EditText for name, quantity, unit
     - Add remove button for each ingredient item
     - Add drag handle for reordering ingredients
     - _Requirements: 12.6, 12.8, 12.13_
 
-  - [~] 17.3 Create instruction entry UI components
+  - [ ] 17.3 Create instruction entry UI components
     - Create instruction item layout with EditText for instruction text
     - Add remove button for each instruction item
     - Add drag handle for reordering instructions
     - _Requirements: 12.10, 12.12, 12.14_
 
-  - [~] 17.4 Implement ManualEntryViewModel
+  - [ ] 17.4 Implement ManualEntryViewModel
     - Add state for recipe name, yield, serving size, original URL
     - Add state for ingredients list and instructions list
     - Implement addIngredient(), removeIngredient(), reorderIngredients()
@@ -366,7 +366,7 @@ The implementation follows an incremental approach: starting with core data mode
     - Implement saveRecipe() method
     - _Requirements: 12.6, 12.7, 12.8, 12.9, 12.10, 12.11, 12.12, 12.13, 12.14, 12.16, 12.17, 12.18_
 
-  - [~] 17.5 Wire ManualEntryActivity to ViewModel
+  - [ ] 17.5 Wire ManualEntryActivity to ViewModel
     - Bind UI inputs to ViewModel state
     - Implement add/remove/reorder button click handlers
     - Implement save button with validation
@@ -393,7 +393,7 @@ The implementation follows an incremental approach: starting with core data mode
     - **Validates: Requirements 12.16, 12.17, 12.18, 12.19, 12.20, 12.22**
 
 - [ ] 18. Integrate manual entry with import failure flow
-  - [~] 18.1 Update ImportService error handling
+  - [ ] 18.1 Update ImportService error handling
     - When URL fetch fails, show dialog with "Retry" and "Enter Manually" options
     - When parse fails, show dialog with "Enter Manually" option
     - Launch ManualEntryActivity when user selects manual entry
@@ -406,18 +406,18 @@ The implementation follows an incremental approach: starting with core data mode
     - **Validates: Requirements 12.1, 12.2, 12.3**
 
 - [ ] 19. Set up app icon and branding
-  - [~] 19.1 Add kitchen-icon.png to launcher icon resources
+  - [ ] 19.1 Add kitchen-icon.png to launcher icon resources
     - Copy kitchen-icon.png to mipmap-mdpi, mipmap-hdpi, mipmap-xhdpi, mipmap-xxhdpi, mipmap-xxxhdpi
     - Update AndroidManifest.xml to reference kitchen-icon as app icon
     - _Requirements: Visual branding requirement_
 
 - [ ] 20. Final integration and polish
-  - [~] 20.1 Add navigation from RecipeListActivity to ManualEntryActivity
+  - [ ] 20.1 Add navigation from RecipeListActivity to ManualEntryActivity
     - Add FloatingActionButton or menu item for "Add Recipe Manually"
     - Launch ManualEntryActivity on button click
     - _Requirements: 12.3_
 
-  - [~] 20.2 Implement recipe deletion functionality
+  - [ ] 20.2 Implement recipe deletion functionality
     - Add delete option in RecipeDetailActivity (menu item or button)
     - Show confirmation dialog before deletion
     - Call repository.deleteRecipe() on confirmation
@@ -431,7 +431,7 @@ The implementation follows an incremental approach: starting with core data mode
     - Test end-to-end flow: filter by category → select result → view detail
     - _Requirements: All requirements_
 
-- [~] 21. Final checkpoint - Ensure all features work end-to-end
+- [ ] 21. Final checkpoint - Ensure all features work end-to-end
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Notes

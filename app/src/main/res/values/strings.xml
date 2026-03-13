@@ -36,6 +36,8 @@
     <!-- Edit and Delete Strings -->
     <string name="edit_button">Edit</string>
     <string name="delete_button">Delete</string>
+    <string name="save_button">Save</string>
+    <string name="cancel_button">Cancel</string>
     <string name="fallback_message">This is a fallback recipe with limited data</string>
     <string name="fallback_indicator">Limited data - click to edit</string>
     <string name="delete_confirmation_title">Delete Recipe</string>

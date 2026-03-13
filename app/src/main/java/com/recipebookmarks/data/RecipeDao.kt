@@ -28,4 +28,7 @@ interface RecipeDao {
 
     @Query("SELECT * FROM recipes ORDER BY createdAt DESC")
     suspend fun getAllOnce(): List<Recipe>
+
+    @Query("SELECT * FROM recipes WHERE id = :id")
+    suspend fun getByIdOnce(id: Long): Recipe?
 }
