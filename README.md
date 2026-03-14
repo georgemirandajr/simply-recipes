@@ -112,7 +112,7 @@ RecipeBookmarks/
 - Import recipes from shared URLs
 - Manual recipe entry
 - Offline data persistence with Room database
-- Proven to work well allrecipes, seriouseats, delish, bonappetit, foodandwine, thekitchn
+- Proven to work well allrecipes, seriouseats, delish, bonappetit, foodandwine, thekitchn, foodnetwork
 
 ## Architecture
 
