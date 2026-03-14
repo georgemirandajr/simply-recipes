@@ -49,7 +49,14 @@ class NetworkClientImpl : NetworkClient {
 
             val request = Request.Builder()
                 .url(url)
-                .addHeader("User-Agent", "Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36")
+                .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36")
+                .addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8")
+                .addHeader("Accept-Language", "en-US,en;q=0.9")
+                .addHeader("Upgrade-Insecure-Requests", "1")
+                .addHeader("Sec-Fetch-Dest", "document")
+                .addHeader("Sec-Fetch-Mode", "navigate")
+                .addHeader("Sec-Fetch-Site", "none")
+                .addHeader("Sec-Fetch-User", "?1")
                 .build()
 
             android.util.Log.d("NetworkClientImpl", "Executing request...")

@@ -232,8 +232,8 @@ class RecipeDetailActivity : AppCompatActivity() {
         }
         
         // Set up adapter
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categoryNames)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val adapter = ArrayAdapter(this, R.layout.spinner_item, categoryNames)
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
         categorySpinner.adapter = adapter
         
         // Set up selection listener

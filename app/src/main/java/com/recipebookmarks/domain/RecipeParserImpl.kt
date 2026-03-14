@@ -38,6 +38,12 @@ class RecipeParserImpl : RecipeParser {
                 return@withContext rdfaResult
             }
             
+            // Try Food Network site-specific parsing
+            val foodNetworkResult = parseFoodNetwork(document, sourceUrl)
+            if (foodNetworkResult is ParseResult.Success) {
+                return@withContext foodNetworkResult
+            }
+
             // All parsing methods failed - create fallback recipe
             createFallbackRecipe(html, sourceUrl)
         } catch (e: Exception) {
@@ -408,6 +414,49 @@ class RecipeParserImpl : RecipeParser {
             )
         } catch (e: Exception) {
             return null
+        }
+    }
+
+    private fun parseFoodNetwork(document: Document, sourceUrl: String): ParseResult {
+        try {
+            // Title: div#recipeHead > div.assetTitle > h2
+            val titleEl = document.select("div#recipeHead div.assetTitle h2").firstOrNull()
+                ?: return ParseResult.Failure(ParseError.NO_RECIPE_DATA)
+            val name = titleEl.text().trim()
+            if (name.isBlank()) return ParseResult.Failure(ParseError.MISSING_REQUIRED_FIELDS)
+
+            // Yield: div.o-RecipeInfo ul.o-RecipeInfo__m-Yield
+            val yieldEl = document.select("div.o-RecipeInfo ul.o-RecipeInfo__m-Yield").firstOrNull()
+            val yield = yieldEl?.text()?.trim()?.takeIf { it.isNotBlank() }
+
+            // Ingredients: div.recipe-body > div.bodyLeft
+            val ingredientsContainer = document.select("div.recipe-body div.bodyLeft").firstOrNull()
+                ?: return ParseResult.Failure(ParseError.MISSING_REQUIRED_FIELDS)
+            val ingredientEls = ingredientsContainer.select("li, p").filter { it.text().isNotBlank() }
+            if (ingredientEls.isEmpty()) return ParseResult.Failure(ParseError.MISSING_REQUIRED_FIELDS)
+            val ingredients = ingredientEls.mapIndexed { i, el -> parseIngredientText(el.text().trim(), i) }
+
+            // Instructions: div.bodyRight > section > div.o-Method__m-Body
+            val instructionsContainer = document.select("div.bodyRight section div.o-Method__m-Body").firstOrNull()
+                ?: return ParseResult.Failure(ParseError.MISSING_REQUIRED_FIELDS)
+            val instructionEls = instructionsContainer.select("li, p").filter { it.text().isNotBlank() }
+            if (instructionEls.isEmpty()) return ParseResult.Failure(ParseError.MISSING_REQUIRED_FIELDS)
+            val instructions = instructionEls.mapIndexed { i, el -> Instruction(el.text().trim(), i) }
+
+            return ParseResult.Success(
+                Recipe(
+                    name = name,
+                    ingredients = ingredients,
+                    instructions = instructions,
+                    yield = yield,
+                    servingSize = null,
+                    nutritionInfo = null,
+                    originalUrl = sourceUrl,
+                    category = null
+                )
+            )
+        } catch (e: Exception) {
+            return ParseResult.Failure(ParseError.INVALID_HTML)
         }
     }
 

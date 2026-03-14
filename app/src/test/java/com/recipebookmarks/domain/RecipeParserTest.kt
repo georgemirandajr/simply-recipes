@@ -284,3 +284,108 @@ class RecipeParserTest : StringSpec({
         title shouldBe "C".repeat(200)
     }
 })
+
+class RecipeParserFoodNetworkTest : StringSpec({
+
+    fun buildFoodNetworkHtml(
+        title: String = "Classic Beef Stew",
+        yield: String? = "4 servings",
+        ingredients: List<String> = listOf("2 lbs beef", "3 carrots", "2 potatoes"),
+        instructions: List<String> = listOf("Brown the beef.", "Add vegetables.", "Simmer 1 hour.")
+    ): String {
+        val yieldHtml = if (yield != null)
+            """<div class="o-RecipeInfo"><ul class="o-RecipeInfo__m-Yield"><li>$yield</li></ul></div>"""
+        else ""
+
+        val ingredientItems = ingredients.joinToString("") { "<li>$it</li>" }
+        val instructionItems = instructions.joinToString("") { "<li>$it</li>" }
+
+        return """
+            <html><body>
+              <div class="recipeHead" id="recipeHead">
+                <div class="assetTitle"><h2>$title</h2></div>
+              </div>
+              $yieldHtml
+              <div class="recipe-body">
+                <div class="bodyLeft"><ul>$ingredientItems</ul></div>
+                <div class="bodyRight">
+                  <section>
+                    <div class="o-Method__m-Body"><ol>$instructionItems</ol></div>
+                  </section>
+                </div>
+              </div>
+            </body></html>
+        """.trimIndent()
+    }
+
+    "Food Network - parses title, ingredients, and instructions" {
+        val parser = RecipeParserImpl()
+        val html = buildFoodNetworkHtml()
+        val result = runBlocking { parser.parseRecipe(html, "https://www.foodnetwork.com/recipes/beef-stew") }
+
+        result shouldBe instanceOf<ParseResult.Success>()
+        val recipe = (result as ParseResult.Success).recipe
+        recipe.isFallback shouldBe false
+        recipe.name shouldBe "Classic Beef Stew"
+        recipe.ingredients.size shouldBe 3
+        recipe.instructions.size shouldBe 3
+        recipe.instructions[0].text shouldBe "Brown the beef."
+        recipe.originalUrl shouldBe "https://www.foodnetwork.com/recipes/beef-stew"
+    }
+
+    "Food Network - parses yield when present" {
+        val parser = RecipeParserImpl()
+        val html = buildFoodNetworkHtml(yield = "6 servings")
+        val result = runBlocking { parser.parseRecipe(html, "https://www.foodnetwork.com/recipes/test") }
+
+        val recipe = (result as ParseResult.Success).recipe
+        recipe.yield shouldBe "6 servings"
+    }
+
+    "Food Network - yield is null when absent" {
+        val parser = RecipeParserImpl()
+        val html = buildFoodNetworkHtml(yield = null)
+        val result = runBlocking { parser.parseRecipe(html, "https://www.foodnetwork.com/recipes/test") }
+
+        val recipe = (result as ParseResult.Success).recipe
+        recipe.yield shouldBe null
+    }
+
+    "Food Network - falls back when title element missing" {
+        val parser = RecipeParserImpl()
+        val html = """
+            <html><body>
+              <div class="recipe-body">
+                <div class="bodyLeft"><ul><li>1 cup flour</li></ul></div>
+                <div class="bodyRight"><section><div class="o-Method__m-Body"><ol><li>Mix.</li></ol></div></section></div>
+              </div>
+            </body></html>
+        """.trimIndent()
+        val result = runBlocking { parser.parseRecipe(html, "https://www.foodnetwork.com/recipes/test") }
+
+        val recipe = (result as ParseResult.Success).recipe
+        recipe.isFallback shouldBe true
+    }
+
+    "Food Network - instructions preserve order" {
+        val parser = RecipeParserImpl()
+        val steps = listOf("Step one.", "Step two.", "Step three.", "Step four.")
+        val html = buildFoodNetworkHtml(instructions = steps)
+        val result = runBlocking { parser.parseRecipe(html, "https://www.foodnetwork.com/recipes/test") }
+
+        val recipe = (result as ParseResult.Success).recipe
+        recipe.instructions.map { it.text } shouldBe steps
+        recipe.instructions.map { it.order } shouldBe listOf(0, 1, 2, 3)
+    }
+
+    "Food Network - does not interfere with JSON-LD parsing on other sites" {
+        val parser = RecipeParserImpl()
+        val jsonLd = """{"@context":"https://schema.org","@type":"Recipe","name":"Pasta","recipeIngredient":["500g pasta"],"recipeInstructions":["Boil pasta"]}"""
+        val html = """<html><head><script type="application/ld+json">$jsonLd</script></head><body></body></html>"""
+        val result = runBlocking { parser.parseRecipe(html, "https://www.allrecipes.com/recipe/pasta") }
+
+        val recipe = (result as ParseResult.Success).recipe
+        recipe.name shouldBe "Pasta"
+        recipe.isFallback shouldBe false
+    }
+})
